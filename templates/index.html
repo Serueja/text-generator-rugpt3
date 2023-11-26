@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Text Generation</title>
+    <style>
+        /* Adjust width of the input field */
+        #input_text {
+            width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Text Generation</h1>
+    <form action="/generate_text" method="post">
+        <label for="input_text">Enter Text:</label>
+        <input type="text" id="input_text" name="text" required >
+
+        <button type="submit">Generate</button>
+    </form>
+
+    <h2>Generated Text:</h2>
+    <p id="generated_text"></p>
+
+    <script>
+        // Function to handle the form submission
+        async function generateText(event) {
+            event.preventDefault();
+
+            const inputText = document.getElementById('input_text').value;
+
+            const response = await fetch('/generate_text', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ text: inputText })
+            });
+
+            const data = await response.json();
+
+            // Display the generated text
+            const generatedText = document.getElementById('generated_text');
+            generatedText.innerText = data.generated_text[0].generated_text;
+        }
+
+        // Attach the form submission event listener
+        const form = document.querySelector('form');
+        form.addEventListener('submit', generateText);
+    </script>
+</body>
+</html>
